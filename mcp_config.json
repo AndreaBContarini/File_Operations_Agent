@@ -24,8 +24,8 @@
       ],
       "env": {
         "PYTHONPATH": "/Users/andrea/Desktop/assignment",
-        "OPENAI_API_KEY": "YOUR-API-KEY-HERE",
-    s      }
+        "OPENAI_API_KEY": "YOUR-API-KEY-HERE"
+      }
     }
   }
-} 
+}

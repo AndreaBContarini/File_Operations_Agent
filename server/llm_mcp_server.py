@@ -37,13 +37,13 @@ except ImportError as e:
 
 class LLMMCPServer:
     """
-    Enhanced MCP Server che usa LLMFileAgent con GPT-4o.
+    Enhanced MCP Server che usa Custom ReAct Agent con GPT-4o.
     Implementa il protocollo Model Context Protocol con reasoning LLM avanzato.
     """
     
     def __init__(self, base_directory: str, openai_api_key: str = None, groq_api_key: str = None, server_name: str = "llm-file-operations-agent"):
         """
-        Inizializza il server MCP con LLM agent.
+        Inizializza il server MCP con Custom ReAct agent.
         
         Args:
             base_directory: Directory base per le operazioni sui file
@@ -67,7 +67,7 @@ class LLMMCPServer:
         self._register_capabilities()
     
     def _initialize_agent(self, openai_api_key: str = None, groq_api_key: str = None):
-        """Inizializza l'agente LLM FileOperations."""
+        """Inizializza l'agente Custom ReAct FileOperations."""
         try:
             self.agent = LLMFileAgent(
                 base_directory=str(self.base_directory),
@@ -75,7 +75,7 @@ class LLMMCPServer:
                 groq_api_key=groq_api_key,
                 verbose=False  # Verbose=False per il server
             )
-            logger.info(f"LLM Agent initialized for directory: {self.base_directory}")
+            logger.info(f"Custom ReAct Agent initialized for directory: {self.base_directory}")
             
             # Log delle informazioni sull'agente
             agent_info = self.agent.get_agent_info()
@@ -83,7 +83,7 @@ class LLMMCPServer:
             logger.info(f"Validator available: {agent_info['validator_model']['available']}")
             
         except Exception as e:
-            logger.error(f"Failed to initialize LLM agent: {e}")
+            logger.error(f"Failed to initialize Custom ReAct agent: {e}")
             raise
     
     def _register_capabilities(self):
@@ -91,7 +91,7 @@ class LLMMCPServer:
         # Tool capabilities - Enhanced with LLM reasoning
         self.capabilities["tools"] = {
             "llm_query": {
-                "description": "Send a natural language query to the LLM-powered agent for intelligent file operations",
+                "description": "Send a natural language query to the Custom ReAct agent for intelligent file operations",
                 "inputSchema": {
                     "type": "object",
                     "properties": {
@@ -165,11 +165,11 @@ class LLMMCPServer:
         # Prompts capabilities
         self.capabilities["prompts"] = {
             "llm_help": {
-                "description": "Get comprehensive help for the LLM-powered file operations agent",
+                "description": "Get comprehensive help for the Custom ReAct file operations agent",
                 "arguments": []
             },
             "agent_info": {
-                "description": "Get detailed information about the LLM agent capabilities and models",
+                "description": "Get detailed information about the Custom ReAct agent capabilities and models",
                 "arguments": []
             },
             "directory_overview": {
@@ -249,7 +249,7 @@ class LLMMCPServer:
                 "serverInfo": {
                     "name": self.server_name,
                     "version": "2.0.0",
-                    "description": f"LLM-powered File Operations Agent MCP Server - Working directory: {self.base_directory}",
+                    "description": f"Custom ReAct File Operations Agent MCP Server - Working directory: {self.base_directory}",
                     "agent_type": agent_info["agent_type"],
                     "main_model": agent_info["main_model"]["name"],
                     "validator_model": agent_info["validator_model"]["model"]
@@ -428,7 +428,7 @@ class LLMMCPServer:
             content = self.agent.get_help()
         elif prompt_name == "agent_info":
             agent_info = self.agent.get_agent_info()
-            content = f"""LLM File Operations Agent Information:
+            content = f"""Custom ReAct File Operations Agent Information:
 
 Type: {agent_info['agent_type']}
 Directory: {agent_info['base_directory']}
@@ -631,7 +631,7 @@ def main():
     logger.info("🎬 LLM MCP Server starting up...")
     
     parser = argparse.ArgumentParser(
-        description="LLM File Operations Agent MCP Server",
+        description="Custom ReAct File Operations Agent MCP Server",
         formatter_class=argparse.RawDescriptionHelpFormatter
     )
     

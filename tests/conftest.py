@@ -41,7 +41,7 @@ def agent(temp_test_dir):
 
 @pytest.fixture
 def llm_agent(temp_test_dir):
-    """Create an LLMFileAgent instance for testing (if API keys available)."""
+    """Create a Custom ReAct Agent instance for testing (if API keys available)."""
     try:
         from agent.llm_agent import LLMFileAgent
         
@@ -54,7 +54,7 @@ def llm_agent(temp_test_dir):
         else:
             pytest.skip("OpenAI API key not available")
     except Exception as e:
-        pytest.skip(f"LLM Agent not available: {e}")
+        pytest.skip(f"Custom ReAct Agent not available: {e}")
 
 
 @pytest.fixture

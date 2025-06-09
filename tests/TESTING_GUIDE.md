@@ -1,109 +1,109 @@
 # Testing Guide
 
-Guida completa per comprendere ed eseguire i test del File Operations Agent.
+Complete guide to understand and run File Operations Agent tests.
 
-## Panoramica
+## Overview
 
-La test suite del progetto è progettata per garantire la qualità e l'affidabilità di tutti i componenti CRUD e delle funzionalità avanzate dell'agente. I test coprono scenari di successo, gestione degli errori, casi limite e sicurezza.
+The project's test suite is designed to ensure quality and reliability of all CRUD components and advanced agent features. Tests cover success scenarios, error handling, edge cases, and security.
 
-## Struttura Test Suite
+## Test Suite Structure
 
-### File Principali
+### Main Files
 
 #### `conftest.py`
-File di configurazione pytest che definisce fixtures condivise per tutti i test.
+Pytest configuration file that defines shared fixtures for all tests.
 
-**Fixtures Disponibili:**
-- `temp_test_dir`: Crea una directory temporanea con file di test preconfigurati
-- `agent`: Istanza dell'agente deterministico per testing
-- `llm_agent`: Istanza dell'agente LLM (richiede API keys)
-- `sample_files_content`: Contenuti di esempio per test personalizzati
+**Available Fixtures:**
+- `temp_test_dir`: Creates a temporary directory with pre-configured test files
+- `agent`: Deterministic agent instance for testing
+- `llm_agent`: Custom ReAct Agent instance (requires API keys)
+- `sample_files_content`: Sample content for custom tests
 
-**File di Test Preconfigurati:**
+**Pre-configured Test Files:**
 ```
 temp_test_dir/
 ├── example.txt (11 bytes) - "Hello World"
 ├── script.py (21 bytes) - "print('Hello Python')"
 ├── data.json (30 bytes) - '{"name": "test", "value": 123}'
-├── large_file.txt (61 bytes) - Contenuto più lungo per test
-└── empty.txt (0 bytes) - File vuoto
+├── large_file.txt (61 bytes) - Longer content for testing
+└── empty.txt (0 bytes) - Empty file
 ```
 
 #### `test_tools.py`
-Test completi per tutti i tool CRUD e funzionalità avanzate.
+Comprehensive tests for all CRUD tools and advanced features.
 
-**Classi di Test:**
+**Test Classes:**
 
-1. **TestListFiles** (3 test)
-   - Verifica listing corretto dei file
-   - Controllo metadati (nome, dimensione, data modifica, estensione)
-   - Gestione directory inesistenti
+1. **TestListFiles** (3 tests)
+   - Verifies correct file listing
+   - Metadata validation (name, size, modification date, extension)
+   - Non-existent directory handling
 
-2. **TestReadFile** (6 test)
-   - Lettura file di diversi tipi (.txt, .py, .json)
-   - File vuoti
-   - File inesistenti (errore)
-   - Protezione path traversal
+2. **TestReadFile** (6 tests)
+   - Reading different file types (.txt, .py, .json)
+   - Empty files
+   - Non-existent files (error)
+   - Path traversal protection
 
-3. **TestWriteFile** (5 test)
-   - Creazione nuovi file
-   - Sovrascrittura file esistenti
-   - Modalità append
-   - Supporto Unicode
-   - Protezione path traversal
+3. **TestWriteFile** (5 tests)
+   - Creating new files
+   - Overwriting existing files
+   - Append mode
+   - Unicode support
+   - Path traversal protection
 
-4. **TestDeleteFile** (3 test)
-   - Eliminazione file esistenti
-   - File inesistenti (errore)
-   - Protezione path traversal
+4. **TestDeleteFile** (3 tests)
+   - Deleting existing files
+   - Non-existent files (error)
+   - Path traversal protection
 
-5. **TestAnswerQuestionAboutFiles** (7 test)
-   - Conteggio file
-   - Identificazione file più grande/piccolo
-   - Analisi tipi di file
-   - Ricerca file più recente
-   - Ricerca nei contenuti
-   - Gestione directory inesistenti
+5. **TestAnswerQuestionAboutFiles** (7 tests)
+   - File counting
+   - Largest/smallest file identification
+   - File type analysis
+   - Most recent file search
+   - Content searching
+   - Non-existent directory handling
 
-6. **TestToolIntegration** (2 test)
-   - Ciclo CRUD completo
-   - Operazioni concorrenti
+6. **TestToolIntegration** (2 tests)
+   - Complete CRUD cycle
+   - Concurrent operations
 
-## Esecuzione Test
+## Running Tests
 
-### Comandi Base
+### Basic Commands
 
 ```bash
-# Esegui tutti i test
+# Run all tests
 python -m pytest tests/ -v
 
-# Esegui test specifici
+# Run specific tests
 python -m pytest tests/test_tools.py::TestListFiles -v
 
-# Test con coverage
+# Tests with coverage
 python -m pytest tests/ --cov=. --cov-report=html
 
-# Test in modalità quiet
+# Quiet mode tests
 python -m pytest tests/ -q
 ```
 
-### Test Specifici per Tool
+### Tool-Specific Tests
 
 ```bash
-# Test solo tool di lista
+# Test only list operations
 python -m pytest tests/ -k "list" -v
 
-# Test solo operazioni di scrittura
+# Test only write operations
 python -m pytest tests/ -k "write" -v
 
-# Test solo sicurezza
+# Test only security
 python -m pytest tests/ -k "traversal" -v
 
-# Test integrazione
+# Test integration
 python -m pytest tests/ -k "integration" -v
 ```
 
-### Output Atteso
+### Expected Output
 
 ```
 tests/test_tools.py::TestListFiles::test_list_files_success PASSED     [  3%]
@@ -114,84 +114,84 @@ tests/test_tools.py::TestToolIntegration::test_concurrent_operations PASSED [100
 ======================== 26 passed in 0.32s ========================
 ```
 
-## Copertura Test
+## Test Coverage
 
-### Scenari Testati
+### Tested Scenarios
 
-**✅ Operazioni Base:**
-- Lista file con metadati completi
-- Lettura file di diversi formati
-- Scrittura con modalità write/append
-- Eliminazione file esistenti
+**✅ Basic Operations:**
+- List files with complete metadata
+- Read files of different formats
+- Write with write/append modes
+- Delete existing files
 
-**✅ Gestione Errori:**
-- File/directory inesistenti
-- Percorsi non validi
-- Problemi di encoding
-- Errori di permessi
+**✅ Error Handling:**
+- Non-existent files/directories
+- Invalid paths
+- Encoding issues
+- Permission errors
 
-**✅ Sicurezza:**
-- Protezione path traversal (`../../../etc/passwd`)
-- Validazione input
-- Confinamento directory base
+**✅ Security:**
+- Path traversal protection (`../../../etc/passwd`)
+- Input validation
+- Base directory confinement
 
-**✅ Casi Limite:**
-- File vuoti
-- Contenuto Unicode
-- File grandi
-- Operazioni multiple
+**✅ Edge Cases:**
+- Empty files
+- Unicode content
+- Large files
+- Multiple operations
 
-**✅ Integrazione:**
-- Cicli CRUD completi
-- Operazioni sequenziali
-- Consistency dei dati
+**✅ Integration:**
+- Complete CRUD cycles
+- Sequential operations
+- Data consistency
 
-### Metriche Coverage
+### Coverage Metrics
 
-- **Tool Coverage**: 100% (tutti i 5 tool CRUD)
-- **Error Paths**: 100% (tutti i tipi di errore)
+- **Tool Coverage**: 100% (all 5 CRUD tools)
+- **Error Paths**: 100% (all error types)
 - **Security Cases**: 100% (path traversal, validation)
 - **Integration**: 100% (multi-tool workflows)
 
-## Debugging Test
+## Test Debugging
 
-### Test Verbose
+### Verbose Testing
 
 ```bash
-# Output dettagliato con reasoning
+# Detailed output with reasoning
 python -m pytest tests/ -v -s
 
-# Mostra print statements
+# Show print statements
 python -m pytest tests/ -v -s --capture=no
 
-# Stop al primo fallimento
+# Stop at first failure
 python -m pytest tests/ -x
 ```
 
-### Test Singoli
+### Individual Tests
 
 ```bash
-# Test specifico con debug
+# Specific test with debug
 python -m pytest tests/test_tools.py::TestDeleteFile::test_delete_file_success -v -s
 ```
 
-### Fixtures Debug
+### Fixture Debugging
 
-Per debug delle fixtures, modifica `conftest.py`:
+For fixture debugging, modify `conftest.py`:
 
 ```python
 @pytest.fixture
 def temp_test_dir():
     temp_dir = tempfile.mkdtemp()
     print(f"DEBUG: Created temp dir: {temp_dir}")  # Debug line
-    # ... resto del codice
+    # ... rest of code
 ```
 
-## Estensione Test Suite
+## Extending Test Suite
 
-### Aggiungere Nuovi Test
+### Adding New Tests
 
-1. **Per nuovo tool:**
+1. **For new tool:**
    ```python
    class TestNewTool:
        def test_new_tool_success(self, temp_test_dir):
@@ -199,94 +199,177 @@ def temp_test_dir():
            assert result == expected
    ```
 
-2. **Per scenario d'errore:**
+2. **For error scenarios:**
    ```python
-   def test_new_error_case(self, temp_test_dir):
+   def test_new_tool_error(self, temp_test_dir):
        with pytest.raises(SpecificError):
-           tool_function("invalid_input", temp_test_dir)
+           new_tool("invalid_param", temp_test_dir)
    ```
 
-3. **Per integrazione:**
+3. **For integration:**
    ```python
-   def test_integration_workflow(self, temp_test_dir):
-       # Multi-step test scenario
-       step1 = tool1(...)
-       step2 = tool2(step1_result, ...)
-       assert final_condition
+   def test_new_tool_integration(self, temp_test_dir):
+       # Multi-step test
+       step1_result = tool1(temp_test_dir)
+       step2_result = tool2(step1_result, temp_test_dir)
+       assert step2_result == expected
    ```
 
-### Best Practices
+### Custom Fixtures
 
-1. **Nomenclatura**: `test_[component]_[scenario]`
-2. **Isolamento**: Ogni test deve essere indipendente
-3. **Cleanup**: Le fixtures gestiscono automaticamente la pulizia
-4. **Assertions**: Specifiche e descrittive
-5. **Coverage**: Testare sia success che error paths
-
-## Risoluzione Problemi
-
-### Errori Comuni
-
-**Test falliti dopo modifiche:**
-```bash
-# Rimuovi cache pytest
-rm -rf .pytest_cache __pycache__ tests/__pycache__
-
-# Reinstalla dipendenze
-pip install -r requirements.txt
+```python
+@pytest.fixture
+def custom_test_setup():
+    # Custom setup for specific tests
+    setup_data = create_custom_setup()
+    yield setup_data
+    # Cleanup
+    cleanup_custom_setup(setup_data)
 ```
 
-**Problemi directory temporanee:**
-```bash
-# Verifica permessi
-ls -la /tmp/
+### Parameterized Tests
 
-# Pulisci directory temporanee vecchie
-find /tmp -name "tmp*" -user $(whoami) -delete
+```python
+@pytest.mark.parametrize("input,expected", [
+    ("test1.txt", True),
+    ("test2.json", True),
+    ("nonexistent.txt", False),
+])
+def test_file_operations(self, temp_test_dir, input, expected):
+    result = operation(input, temp_test_dir)
+    assert result == expected
 ```
 
-**Import errors:**
-```bash
-# Verifica PYTHONPATH
-export PYTHONPATH=/path/to/assignment:$PYTHONPATH
+## Performance Testing
 
-# Oppure usa -m pytest
-python -m pytest tests/
+### Timing Tests
+
+```python
+import time
+
+def test_large_file_performance(self, temp_test_dir):
+    start = time.time()
+    result = read_large_file(temp_test_dir)
+    duration = time.time() - start
+    
+    assert duration < 1.0  # Should complete in < 1 second
+    assert result is not None
+```
+
+### Memory Tests
+
+```python
+import psutil
+import os
+
+def test_memory_usage(self, temp_test_dir):
+    process = psutil.Process(os.getpid())
+    initial_memory = process.memory_info().rss
+    
+    # Perform operation
+    result = memory_intensive_operation(temp_test_dir)
+    
+    final_memory = process.memory_info().rss
+    memory_increase = final_memory - initial_memory
+    
+    # Memory increase should be reasonable
+    assert memory_increase < 50 * 1024 * 1024  # < 50MB
 ```
 
 ## Continuous Integration
 
 ### GitHub Actions
 
-Esempio configurazione `.github/workflows/test.yml`:
-
 ```yaml
-name: Test Suite
+name: Tests
 on: [push, pull_request]
+
 jobs:
   test:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: [3.8, 3.9, 3.10, 3.11]
+    
     steps:
-      - uses: actions/checkout@v2
-      - name: Set up Python
-        uses: actions/setup-python@v2
-        with:
-          python-version: 3.10
-      - name: Install dependencies
-        run: pip install -r requirements.txt
-      - name: Run tests
-        run: python -m pytest tests/ -v --cov=.
+    - uses: actions/checkout@v3
+    - name: Set up Python
+      uses: actions/setup-python@v3
+      with:
+        python-version: ${{ matrix.python-version }}
+    
+    - name: Install dependencies
+      run: |
+        pip install -r requirements.txt
+        pip install pytest pytest-cov
+    
+    - name: Run tests
+      run: |
+        pytest tests/ --cov=. --cov-report=xml
+    
+    - name: Upload coverage
+      uses: codecov/codecov-action@v3
 ```
 
-### Pre-commit Hooks
+### Local CI Simulation
 
 ```bash
-# Installa pre-commit
-pip install pre-commit
+# Test on multiple Python versions (if available)
+python3.8 -m pytest tests/
+python3.9 -m pytest tests/
+python3.10 -m pytest tests/
+python3.11 -m pytest tests/
 
-# Setup hook per eseguire test prima del commit
-echo "python -m pytest tests/" > .git/hooks/pre-commit
-chmod +x .git/hooks/pre-commit
+# Generate coverage report
+pytest tests/ --cov=. --cov-report=html
+open htmlcov/index.html  # View coverage report
 ```
 
-La test suite garantisce l'affidabilità del File Operations Agent attraverso test completi di tutti i componenti e scenari d'uso. 
+## Troubleshooting
+
+### Common Issues
+
+1. **Import Errors:**
+   ```bash
+   # Ensure PYTHONPATH is set
+   export PYTHONPATH="${PYTHONPATH}:$(pwd)"
+   python -m pytest tests/
+   ```
+
+2. **API Key Tests:**
+   ```bash
+   # Skip API-dependent tests
+   python -m pytest tests/ -m "not requires_api"
+   
+   # Or set environment variables
+   export OPENAI_API_KEY="your_key"
+   export GROQ_API_KEY="your_key"
+   ```
+
+3. **Permission Issues:**
+   ```bash
+   # Ensure write permissions
+   chmod +w test_files/
+   python -m pytest tests/
+   ```
+
+4. **Temporary Directory Issues:**
+   ```bash
+   # Clean up temp directories
+   find /tmp -name "tmp*" -type d -delete
+   python -m pytest tests/
+   ```
+
+### Logging Configuration
+
+```python
+# In conftest.py or test files
+import logging
+logging.basicConfig(level=logging.DEBUG)
+
+# Or in test function
+def test_with_logging(self, caplog):
+    with caplog.at_level(logging.INFO):
+        result = function_under_test()
+        assert "Expected log message" in caplog.text
+``` 

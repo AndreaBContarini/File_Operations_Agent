@@ -1,5 +1,5 @@
 """
-Test suite for LLM and Pydantic-AI agents.
+Test suite for Custom ReAct and Pydantic-AI agents.
 Tests agent behavior, validation, and the specific fix for file analysis queries.
 """
 import pytest
@@ -72,8 +72,8 @@ class TestLLMValidator:
             assert is_valid == expected_valid, f"Query '{query}' validation failed: expected {expected_valid}, got {is_valid}. Reason: {reason}"
 
 
-class TestLLMAgent:
-    """Test LLM File Agent functionality."""
+class TestCustomReActAgent:
+    """Test Custom ReAct File Agent functionality."""
     
     @pytest.fixture
     def mock_openai_client(self):
@@ -190,8 +190,8 @@ class TestIntegrationFileAnalysis:
         assert "hello.py" in result
     
     @pytest.mark.asyncio 
-    async def test_llm_agent_processes_analysis_query(self, analysis_test_dir):
-        """Test that LLM agent can process file analysis queries end-to-end."""
+    async def test_custom_react_agent_processes_analysis_query(self, analysis_test_dir):
+        """Test that Custom ReAct agent can process file analysis queries end-to-end."""
         # Only run if we have API keys
         openai_key = os.getenv("OPENAI_API_KEY")
         if not openai_key:

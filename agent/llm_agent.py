@@ -1,6 +1,6 @@
 """
-LLM-powered File Operations Agent using GPT-4o.
-Implements ReAct reasoning pattern with intelligent tool orchestration.
+Custom ReAct File Operations Agent using GPT-4o.
+Implements a custom ReAct reasoning pattern with intelligent tool orchestration.
 """
 import os
 import json
@@ -54,7 +54,7 @@ class LLMFileAgent:
         self.system_prompt = self._build_system_prompt()
         
         if verbose:
-            logger.info(f"LLM Agent initialized for directory: {base_directory}")
+            logger.info(f"Custom ReAct Agent initialized for directory: {base_directory}")
             logger.info(f"Main model: {self.main_model}")
             
             # Mostra status validation con nuovo fallback
@@ -269,7 +269,7 @@ Remember: Tool usage is MANDATORY for all file operations. Always use tools firs
                     # Eseguire il tool
                     try:
                         tool_result = self.tool_registry.execute_tool(tool_name, **tool_args) #tool_registry: oggetto che gestisce i tool
-                        tool_result_str = str(tool_result) if tool_result is not None else "Operation completed successfully" #tool_result: risultato dell'esecuzione del tool
+                        tool_result_str = self._format_tool_result(tool_name, tool_result) if tool_result is not None else "Operation completed successfully" #tool_result: risultato dell'esecuzione del tool
                     except Exception as e:
                         tool_result_str = f"Error executing {tool_name}: {str(e)}" #tool_result_str: stringa che rappresenta il risultato dell'esecuzione del tool
                         all_tools_successful = False
@@ -327,7 +327,7 @@ Remember: Tool usage is MANDATORY for all file operations. Always use tools firs
         try:
             messages.append({
                 "role": "user", 
-                "content": "Based on the tool results above, provide a complete response to my original question. If you read a file, include its content. If you analyzed files, include your analysis. Be specific and include all relevant information from the tool outputs."
+                "content": "Based on the tool results above, provide a complete response to my original question. IMPORTANT: If you listed files, show ALL the file names clearly. If you read a file, include its content. If you analyzed files, include your analysis. Be specific and include all relevant information from the tool outputs."
             })
             
             final_response = self.openai_client.chat.completions.create(
@@ -457,6 +457,57 @@ Remember: Tool usage is MANDATORY for all file operations. Always use tools firs
         
         return tools
     
+    def _format_tool_result(self, tool_name: str, tool_result: Any) -> str:
+        """
+        Formatta il risultato di un tool per una migliore presentazione a GPT-4o.
+        
+        Args:
+            tool_name: Nome del tool eseguito
+            tool_result: Risultato restituito dal tool
+            
+        Returns:
+            Stringa formattata del risultato
+        """
+        if tool_name == "list_files" and isinstance(tool_result, list):
+            if not tool_result:
+                return "No files found in the directory."
+            
+            # Formatta la lista di file in modo leggibile
+            formatted_lines = ["Files in directory:"]
+            for i, file_info in enumerate(tool_result, 1):
+                name = file_info.get("name", "unknown")
+                size = file_info.get("size", 0)
+                extension = file_info.get("extension", "")
+                
+                # Formato: "1. filename.ext (1.2 KB)"
+                if size < 1024:
+                    size_str = f"{size} B"
+                elif size < 1024*1024:
+                    size_str = f"{size/1024:.1f} KB"
+                else:
+                    size_str = f"{size/(1024*1024):.1f} MB"
+                
+                formatted_lines.append(f"{i}. {name} ({size_str})")
+            
+            formatted_lines.append(f"\nTotal: {len(tool_result)} files")
+            return "\n".join(formatted_lines)
+            
+        elif tool_name == "read_file":
+            # Per read_file, aggiungi informazioni sul file
+            return f"File content:\n\n{tool_result}"
+            
+        elif tool_name == "write_file":
+            return f"File written successfully: {tool_result}"
+            
+        elif tool_name == "delete_file":
+            return f"File deleted successfully: {tool_result}"
+            
+        elif tool_name == "answer_question_about_files":
+            return f"Analysis result:\n{tool_result}"
+        
+        # Fallback per tool non riconosciuti
+        return str(tool_result)
+    
     def _should_use_tools(self, original_query: str, messages: List[Dict[str, Any]]) -> bool:
         """
         Determina se la query richiede l'uso di tool per operazioni sui file.
@@ -517,7 +568,7 @@ Remember: Tool usage is MANDATORY for all file operations. Always use tools firs
             Dict con informazioni sull'agente
         """
         return {
-            "agent_type": "LLM-powered File Operations Agent",
+            "agent_type": "Custom ReAct File Operations Agent",
             "main_model": {
                 "name": self.main_model,
                 "provider": "OpenAI",
@@ -538,7 +589,7 @@ Remember: Tool usage is MANDATORY for all file operations. Always use tools firs
     
     def get_help(self) -> str:
         """Restituisce un messaggio di aiuto per l'utente."""
-        return """🤖 LLM File Operations Agent
+        return """🤖 Custom ReAct File Operations Agent
 
 I'm an AI assistant powered by GPT-4o, specialized in file operations. I can understand natural language and intelligently use tools to help you manage files.
 

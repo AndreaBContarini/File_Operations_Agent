@@ -1,25 +1,25 @@
-# Agent Pydantic-AI Hybrid
+# Pydantic-AI Hybrid Agent
 
-Implementazione ibrida dell'agente per operazioni sui file utilizzando il framework **Pydantic-AI** con architettura dual-model.
+Hybrid agent implementation for file operations using the **Pydantic-AI** framework with dual-model architecture.
 
-## Obiettivo
+## Objective
 
-Questo modulo implementa un sistema ibrido che combina:
+This module implements a hybrid system that combines:
 
-- **OpenAI GPT-4o**: Operazioni sui file e reasoning avanzato
-- **Groq llama-3.1-8b-instant**: Validazione query e sicurezza (opzionale)
-- **Pydantic-AI Framework**: Tool orchestration nativa e structured output
+- **OpenAI GPT-4o**: File operations and advanced reasoning
+- **Groq llama-3.1-8b-instant**: Query validation and security (optional)
+- **Pydantic-AI Framework**: Native tool orchestration and structured output
 
-## Architettura
+## Architecture
 
-### Componenti Principali
+### Main Components
 
-1. **`PydanticFileAgent`** - Agent principale con architettura ibrida
-2. **`AgentDependencies`** - Dependency injection type-safe
-3. **`AgentResponse`** - Structured output con validazione Pydantic
-4. **Dual-Model System** - GPT-4o per operazioni, Groq per validazione
+1. **`PydanticFileAgent`** - Main agent with hybrid architecture
+2. **`AgentDependencies`** - Type-safe dependency injection
+3. **`AgentResponse`** - Structured output with Pydantic validation
+4. **Dual-Model System** - GPT-4o for operations, Groq for validation
 
-### Flusso di Elaborazione
+### Processing Flow
 
 ```
 User Query
@@ -31,40 +31,40 @@ GPT-4o File Operations (with tools)
 Structured AgentResponse
 ```
 
-### Confronto con Implementazioni Precedenti
+### Comparison with Previous Implementations
 
-| Aspetto | Implementazione Originale | Pydantic-AI Hybrid |
-|---------|---------------------------|-------------------|
+| Aspect | Original Implementation | Pydantic-AI Hybrid |
+|--------|-------------------------|-------------------|
 | **Architecture** | Single model custom planner | Dual-model hybrid system |
 | **Tool Registry** | Custom ToolRegistry | Native Pydantic-AI tools |
-| **Output** | Dict non strutturato | Structured Pydantic models |
+| **Output** | Unstructured Dict | Structured Pydantic models |
 | **Validation** | Manual validation | Automatic + security layer |
 | **Orchestration** | Manual step-by-step | Declarative + intelligent routing |
 | **Security** | Basic input validation | Dedicated validation model |
 
-## Utilizzo
+## Usage
 
-### CLI Interattiva
+### Interactive CLI
 
 ```bash
 cd agent_pydantic
 python pydantic_cli.py --create-samples -d ./test_files
 ```
 
-Il CLI supporta:
-- Configurazione API interattiva (OpenAI required, Groq optional)
-- Comandi speciali (`/help`, `/status`, `/verbose`, etc.)
-- Query in linguaggio naturale
-- Modalità verbosa per debugging
+The CLI supports:
+- Interactive API configuration (OpenAI required, Groq optional)
+- Special commands (`/help`, `/status`, `/verbose`, etc.)
+- Natural language queries
+- Verbose mode for debugging
 
-### Utilizzo Programmatico
+### Programmatic Usage
 
 ```python
 import asyncio
 from pydantic_agent import PydanticFileAgent
 
 async def main():
-    # Inizializza l'agent ibrido
+    # Initialize hybrid agent
     agent = PydanticFileAgent(
         base_directory="/path/to/files",
         openai_api_key="sk-...",
@@ -72,7 +72,7 @@ async def main():
         verbose=True
     )
     
-    # Esegui query con structured output
+    # Execute query with structured output
     response = await agent.process_query("List all files and tell me which is the largest")
     
     print(f"Success: {response.success}")
@@ -84,26 +84,26 @@ async def main():
 asyncio.run(main())
 ```
 
-## Tool Disponibili
+## Available Tools
 
-Tutti i tool sono implementati come native Pydantic-AI tools:
+All tools are implemented as native Pydantic-AI tools:
 
-- **`list_files_tool()`** - Lista file con metadati completi
-- **`read_file_tool(filename, encoding)`** - Legge contenuto file
-- **`write_file_tool(filename, content, mode, encoding)`** - Scrive/crea file
-- **`delete_file_tool(filename)`** - Elimina file
-- **`answer_question_tool(query)`** - Analisi intelligente sui file
+- **`list_files_tool()`** - List files with complete metadata
+- **`read_file_tool(filename, encoding)`** - Read file content
+- **`write_file_tool(filename, content, mode, encoding)`** - Write/create file
+- **`delete_file_tool(filename)`** - Delete file
+- **`answer_question_tool(query)`** - Intelligent file analysis
 
-### Caratteristiche dei Tool
+### Tool Features
 
-- **Validazione automatica** dei parametri con Pydantic
-- **Error handling** robusto con messaging dettagliato
-- **Dependency injection** type-safe
-- **Logging** configurabile per debugging
+- **Automatic validation** of parameters with Pydantic
+- **Robust error handling** with detailed messaging
+- **Type-safe dependency injection**
+- **Configurable logging** for debugging
 
 ## Structured Output
 
-L'agent restituisce sempre un `AgentResponse` validato:
+The agent always returns a validated `AgentResponse`:
 
 ```python
 class AgentResponse(BaseModel):
@@ -111,7 +111,7 @@ class AgentResponse(BaseModel):
     message: str
     type: str
     
-    # Dati opzionali
+    # Optional data
     files: Optional[List[Dict[str, Any]]] = None
     file_content: Optional[str] = None
     analysis_result: Optional[str] = None
@@ -119,46 +119,46 @@ class AgentResponse(BaseModel):
     reasoning: Optional[str] = None
 ```
 
-## Configurazione
+## Configuration
 
-### API Keys Required
+### Required API Keys
 
-- **OpenAI API Key**: Required per GPT-4o (operazioni sui file)
-- **Groq API Key**: Optional per llama-3.1-8b-instant (validazione)
+- **OpenAI API Key**: Required for GPT-4o (file operations)
+- **Groq API Key**: Optional for llama-3.1-8b-instant (validation)
 
-### Modelli Supportati
+### Supported Models
 
 #### File Operations (Required)
-- **OpenAI GPT-4o**: Modello principale per operazioni sui file
+- **OpenAI GPT-4o**: Main model for file operations
 
 #### Validation (Optional)
-- **Groq llama-3.1-8b-instant**: Validazione query per sicurezza
+- **Groq llama-3.1-8b-instant**: Query validation for security
 
-## Sicurezza
+## Security
 
 ### Validation Layer
 
-Se configurato, Groq fornisce un layer di sicurezza che:
-- Analizza le query utente prima dell'esecuzione
-- Classifica come SAFE o DANGEROUS
-- Blocca operazioni potenzialmente pericolose
-- Previene path traversal e comandi di sistema
+If configured, Groq provides a security layer that:
+- Analyzes user queries before execution
+- Classifies as SAFE or DANGEROUS
+- Blocks potentially dangerous operations
+- Prevents path traversal and system commands
 
 ### Fallback Mechanism
 
-- Se Groq non è disponibile: procede direttamente con GPT-4o
-- Se Groq fallisce: continua l'elaborazione con logging dell'errore
-- Nessuna interruzione del servizio per problemi di validazione
+- If Groq is unavailable: proceeds directly with GPT-4o
+- If Groq fails: continues processing with error logging
+- No service interruption for validation issues
 
-## Testing e Esempi
+## Testing and Examples
 
 ### CLI Testing
 
 ```bash
-# Test con file di esempio
+# Test with sample files
 python pydantic_cli.py --create-samples -d ./test_files
 
-# Test query comuni
+# Test common queries
 > list all files
 > read config.json
 > create a file test.txt with content Hello World
@@ -166,7 +166,7 @@ python pydantic_cli.py --create-samples -d ./test_files
 > analyze all Python files
 ```
 
-### Query di Esempio
+### Example Queries
 
 - "List all files in the directory"
 - "Read the content of config.json" 
@@ -177,76 +177,132 @@ python pydantic_cli.py --create-samples -d ./test_files
 
 ## Multi-Step Reasoning
 
-L'agent GPT-4o gestisce automaticamente task complessi:
+The GPT-4o agent automatically handles complex tasks:
 
 ```python
-# Query complessa automaticamente scomposta
+# Complex query automatically decomposed
 response = await agent.process_query(
     "Count the files, then read the most recent one and summarize it"
 )
 
-# L'agent automaticamente:
-# 1. Chiama list_files_tool() per contare i file
-# 2. Analizza i metadati per trovare il file più recente  
-# 3. Chiama read_file_tool() per leggere il contenuto
-# 4. Genera un riassunto del contenuto
-# 5. Restituisce una risposta strutturata
+# The agent automatically:
+# 1. Calls list_files_tool() to count files
+# 2. Analyzes metadata to find the most recent file  
+# 3. Calls read_file_tool() to read content
+# 4. Generates content summary
+# 5. Returns structured response
 ```
 
-## Vantaggi dell'Architettura Ibrida
+## Hybrid Architecture Benefits
 
-### 1. Sicurezza Migliorata
-- Validation layer dedicato con Groq
-- Prevenzione di operazioni pericolose
-- Sanitizzazione automatica delle query
+### 1. Enhanced Security
+- Dedicated validation layer with Groq
+- Prevention of dangerous operations
+- Graceful fallback when validation unavailable
 
-### 2. Performance Ottimizzate
-- GPT-4o dedicato alle operazioni sui file
-- Modello di validazione lightweight (llama-3.1-8b-instant)
-- Routing intelligente delle richieste
+### 2. Structured Output
+- Automatic Pydantic validation
+- Type-safe responses
+- Consistent output format
+- Reduced parsing errors
 
-### 3. Reliability
-- Fallback automatico se validazione non disponibile
-- Error handling robusto su entrambi i modelli
-- Graceful degradation
+### 3. Modern Framework Integration
+- Native Pydantic-AI tool support
+- Declarative tool orchestration
+- Dependency injection system
+- Automatic error handling
 
-### 4. Structured Output
-- Output sempre validato con Pydantic
-- Schema consistente per tutte le risposte
-- Type safety completa
-
-### 5. Developer Experience
-- CLI interattiva user-friendly
-- Logging configurabile
-- Configurazione API semplificata
-
-## File Structure
-
-```
-agent_pydantic/
-├── pydantic_agent.py      # Agent principale ibrido
-├── pydantic_cli.py        # CLI interattiva
-├── models.py              # Pydantic models
-├── dependencies.py        # Dependency injection
-└── README.md              # Questa documentazione
-```
+### 4. Performance Optimization
+- Fast validation with llama-3.1-8b-instant
+- Intelligent model routing
+- Optional validation for speed
+- Efficient tool coordination
 
 ## Error Handling
 
-- **Validation errors**: Gestiti dal layer Groq con fallback
-- **File operation errors**: Gestiti da GPT-4o con retry automatico
-- **Structured error responses**: Sempre validate con Pydantic
-- **Detailed logging**: Configurabile per debugging
+### Graceful Degradation
 
-## Performance
+```python
+# If validation model fails
+response = await agent.process_query("dangerous query")
+# → Continues with GPT-4o but logs warning
 
-L'implementazione ibrida offre:
+# If file operation fails
+response = await agent.process_query("read nonexistent.txt")
+# → Returns structured error with details
+```
 
-- **Reasoning efficiente** con GPT-4o dedicato
-- **Validazione veloce** con llama-3.1-8b-instant
-- **Memory usage ottimizzato** senza state management custom
-- **Latency controllata** con routing intelligente
+### Error Response Structure
 
----
+```python
+AgentResponse(
+    success=False,
+    message="File 'nonexistent.txt' not found in directory",
+    type="error",
+    reasoning="Attempted file read operation failed"
+)
+```
 
-**Note**: Questa implementazione dimostra come un'architettura ibrida possa combinare i punti di forza di diversi modelli LLM, mantenendo sicurezza, performance e usabilità in un sistema di produzione. 
+## Development and Extension
+
+### Adding New Tools
+
+```python
+@agent.file_operations_agent.tool
+async def custom_tool(
+    ctx: RunContext[AgentDependencies],
+    param: str
+) -> str:
+    """Custom tool implementation."""
+    try:
+        # Tool logic using ctx.deps
+        result = custom_operation(param, ctx.deps.base_directory)
+        return result
+    except Exception as e:
+        raise Exception(f"Custom tool failed: {str(e)}")
+```
+
+### Custom Response Types
+
+```python
+class CustomResponse(BaseModel):
+    success: bool
+    custom_field: str
+    custom_data: Optional[Dict[str, Any]] = None
+
+# Use in agent initialization
+agent = Agent(
+    model=openai_model,
+    deps_type=AgentDependencies,
+    result_type=CustomResponse,  # Custom response type
+    system_prompt=custom_prompt
+)
+```
+
+## Integration
+
+### MCP Server
+
+The Pydantic-AI agent can be exposed via MCP server:
+
+```python
+# Available in server/pydantic_mcp_server.py (if implemented)
+# Provides same MCP interface as other agents
+```
+
+### API Endpoints
+
+```python
+from fastapi import FastAPI
+from pydantic_agent import PydanticFileAgent
+
+app = FastAPI()
+agent = PydanticFileAgent(...)
+
+@app.post("/query")
+async def process_query(query: str):
+    response = await agent.process_query(query)
+    return response.dict()
+```
+
+This hybrid implementation showcases modern agentic patterns with structured output, type safety, and intelligent model routing while maintaining compatibility with the original tool interfaces. 

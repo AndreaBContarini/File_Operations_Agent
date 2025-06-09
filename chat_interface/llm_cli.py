@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Enhanced CLI interface for LLM-powered File Operations Agent.
+Enhanced CLI interface for Custom ReAct File Operations Agent.
 Supports GPT-4o for main reasoning and LLaMA 3 8B for prompt validation.
 """
 import asyncio
@@ -19,7 +19,7 @@ from agent import LLMFileAgent
 
 class LLMFileAgentCLI:
     """
-    Interfaccia CLI per l'agente LLM-powered.
+    Interfaccia CLI per l'agente Custom ReAct.
     Supporta integrazione con OpenAI GPT-4o e Groq LLaMA 3 8B.
     """
     
@@ -62,12 +62,12 @@ class LLMFileAgentCLI:
             )
             return True
         except Exception as e:
-            print(f"❌ Failed to initialize LLM agent: {e}")
+            print(f"❌ Failed to initialize Custom ReAct agent: {e}")
             return False
     
     def print_welcome(self):
         """Stampa il messaggio di benvenuto."""
-        print("🤖 LLM File Operations Agent CLI")
+        print("🤖 Custom ReAct File Operations Agent CLI")
         print("=" * 50)
         print(f"📁 Working directory: {self.base_directory}")
         
@@ -283,7 +283,7 @@ def setup_api_keys() -> tuple[str, str]:
 async def main():
     """Funzione principale."""
     parser = argparse.ArgumentParser(
-        description="LLM File Operations Agent CLI",
+        description="Custom ReAct File Operations Agent CLI",
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog="""
 Examples:

@@ -14,7 +14,7 @@ This project implements an autonomous agent capable of:
 
 The system offers **two operational modes**:
 
-1. **LLM-Powered Agent** (GPT-4o + LLaMA 3 8B) - Advanced artificial intelligence
+1. **custom ReAct Agent** (GPT-4o + LLaMA 3 8B) - Advanced artificial intelligence
 2. **Pydantic-AI Agent** (Native framework) - Modern framework implementation
 
 ## Architecture
@@ -113,7 +113,7 @@ GROQ_API_KEY=your_groq_api_key_here
 
 The project offers **2 distinct agents** for different operational needs:
 
-### 1. LLM-Powered Agent (Advanced AI)
+### 1. Custom ReAct Agent (Advanced AI)
 
 **Features:**
 - GPT-4o for reasoning and main planning
@@ -178,10 +178,10 @@ python chat_interface/pydantic_cli.py --directory /path/to/working/directory
 
 | Scenario | Recommended Agent | Reason |
 |----------|-------------------|---------|
-| Testing and development | LLM-Powered | Fast and reliable |
-| Complex queries | LLM-Powered or Pydantic-AI | Superior natural understanding |
+| Testing and development | Custom ReAct Agent | Fast and reliable |
+| Complex queries | Custom ReAct Agent or Pydantic-AI | Superior natural understanding |
 | Advanced analysis | Pydantic-AI | Modern framework + structured output |
-| Enterprise production | LLM-Powered or Pydantic-AI | Greater flexibility and robustness |
+| Enterprise production | Custom ReAct Agent or Pydantic-AI | Greater flexibility and robustness |
 | Framework experimentation | Pydantic-AI | Shows modern framework integration |
 
 ### MCP Integration with Claude Desktop
@@ -195,7 +195,7 @@ Both agents are available as MCP servers:
 
 #### Available MCP Servers
 
-- **llm-file-operations-agent**: Server with LLM capabilities for complex queries
+- **llm-file-operations-agent**: Server with Custom ReAct Agent capabilities for complex queries
 - **Pydantic-AI Agent**: Available through existing servers with structured output
 
 ## Advanced Features
@@ -238,7 +238,7 @@ The project includes a **comprehensive test suite** with 39+ tests verifying all
 
 - **`test_tools.py`**: Complete testing of all five CRUD tools (list, read, write, delete, answer_question). Includes functionality tests, error handling, security validation, and integration tests. Covers path traversal protection, binary file detection, Unicode support, and concurrent operations.
 
-- **`test_agents.py`**: Comprehensive testing of LLM agent functionality and query validation system. Tests the fix for file analysis queries (e.g., "cosa fa hello.py?"), validator behavior, tool usage decisions, and error handling scenarios.
+- **`test_agents.py`**: Comprehensive testing of Custom ReAct agent functionality and query validation system. Tests the fix for file analysis queries (e.g., "cosa fa hello.py?"), validator behavior, tool usage decisions, and error handling scenarios.
 
 - **`conftest.py`**: Test configuration and shared fixtures. Provides temporary test directories with sample files, ensuring consistent test environments across all test modules.
 
@@ -297,7 +297,7 @@ tests/test_tools.py::TestToolIntegration::test_concurrent_operations PASSED [100
 ```
 assignment/
 ├── agent/                  # Main agent logic
-│   ├── llm_agent.py       # LLM-powered agent
+│   ├── llm_agent.py       # Custom ReAct agent
 │   ├── tool_registry.py   # Tool registry
 │   └── llm_validator.py   # LLM validation
 ├── Pydantic-AI_Agent/      # Pydantic-AI implementation
@@ -354,7 +354,7 @@ This project **meets and exceeds** all assignment requirements:
 ### Extra Implementations
 
 - **Pydantic-AI Integration**: Modern framework suggested in assignment
-- **Two distinct agents**: LLM-powered and Pydantic-AI
+- **Two distinct agents**: Custom ReAct and Pydantic-AI
 - **Dual Architecture**: Custom ReAct + Native framework
 - **Structured Output**: Automatic validation with Pydantic
 - **Extended Documentation**: Complete guides in `Guide_Documents/`
