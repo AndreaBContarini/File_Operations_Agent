@@ -1,0 +1,32 @@
+{
+  "mcpServers": {
+    "file-operations-agent": {
+      "command": "/Users/andrea/Desktop/assignment/.venv/bin/python",
+      "args": [
+        "/Users/andrea/Desktop/assignment/server/mcp_server.py",
+        "--directory",
+        "/Users/andrea/Desktop/assignment/test_files",
+        "--name",
+        "file-operations-agent"
+      ],
+      "env": {
+        "PYTHONPATH": "/Users/andrea/Desktop/assignment"
+      }
+    },
+    "llm-file-operations-agent": {
+      "command": "/Users/andrea/Desktop/assignment/.venv/bin/python", 
+      "args": [
+        "/Users/andrea/Desktop/assignment/server/llm_mcp_server.py",
+        "--directory",
+        "/Users/andrea/Desktop/assignment/test_files",
+        "--name",
+        "llm-file-operations-agent"
+      ],
+      "env": {
+        "PYTHONPATH": "/Users/andrea/Desktop/assignment",
+        "OPENAI_API_KEY": "YOUR-API-KEY-HERE",
+        "GROQ_API_KEY": "YOUR-API-KEY-HERE"
+      }
+    }
+  }
+} 

@@ -1,0 +1,14 @@
+# LLM Integration  
+openai>=1.40.0
+groq>=0.8.0
+pydantic>=2.5.0
+pydantic-ai>=0.0.14
+
+# Testing
+pytest>=8.4.0
+pytest-asyncio>=1.0.0
+pytest-cov>=6.1.0
+
+# Optional for enhanced functionality
+python-dotenv>=1.0.0
+tiktoken>=0.7.0 

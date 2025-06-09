@@ -1,0 +1,3 @@
+python chat_interface/llm_cli.py --directory ./test_files     
+
+python chat_interface/pydantic_cli.py --directory ./test_files
