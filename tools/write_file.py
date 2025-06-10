@@ -46,9 +46,9 @@ def write_file(filename: str, content: str, base_directory: str,
         
         # Scrive il file
         with open(file_path, mode, encoding=encoding) as f:
-            f.write(content)
+            f.write(content) # scrive il contenuto nel file
             
-        return True
+        return True # ritorna True se l'operazione ha successo
         
     except PermissionError as e:
         raise PermissionError(f"Insufficient permissions to write {filename}: {e}")

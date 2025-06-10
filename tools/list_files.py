@@ -47,7 +47,7 @@ def list_files(base_directory: str) -> List[Dict[str, Any]]:
                     # Salta file inaccessibili
                     continue
         
-        # Ordina per nome
+        # Ordina i file per nome (in ordine alfabetico)
         files_info.sort(key=lambda x: x["name"])
         
         return files_info

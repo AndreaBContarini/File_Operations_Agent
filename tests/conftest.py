@@ -1,5 +1,8 @@
 """
 Pytest configuration and shared fixtures for the test suite.
+It is used to create a temporary directory for testing file operations.
+Configuration of LLM agents with API keys
+Essential for the proper functioning of pytest, because it allows to test the agent with real API keys.
 """
 import pytest
 import tempfile
@@ -28,14 +31,14 @@ def temp_test_dir():
     
     yield temp_dir
     
-    # Cleanup
+    # Cleanup: elimina la directory temporanea
     shutil.rmtree(temp_dir)
 
 
 @pytest.fixture
 def agent(temp_test_dir):
     """Create a FileOperationsAgent instance for testing."""
-    # NOTE: Deterministic agent removed - this fixture maintained for compatibility
+    # NOTE: Deterministic agent(created at the beginning, for initial testing) removed - this fixture maintained for compatibility
     pytest.skip("Deterministic agent was removed from project architecture")
 
 

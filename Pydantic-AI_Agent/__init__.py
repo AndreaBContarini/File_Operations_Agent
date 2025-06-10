@@ -9,7 +9,7 @@ from .pydantic_agent import PydanticFileAgent
 from .dependencies import AgentDependencies
 from .models import AgentResponse
 
-__all__ = [
+__all__ = [ # __all__ è una lista di stringhe che contiene i nomi degli oggetti che vogliamo esportare
     'PydanticFileAgent',
     'AgentDependencies', 
     'AgentResponse'

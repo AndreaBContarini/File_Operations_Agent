@@ -16,7 +16,7 @@ class AgentDependencies:
     """
     base_directory: str
     openai_api_key: str
-    verbose: bool = False
+    verbose: bool = False # verbose è un flag che indica se stampare i log dell'agente
     
     def __post_init__(self):
         """Valida e normalizza la directory base."""

@@ -1,5 +1,5 @@
 """
-Modelli Pydantic per structured output dell'agent.
+Modelli Pydantic, per structured output dell'agent.
 Definisce le strutture dati validate per le risposte dell'agent.
 """
 from typing import Optional, List, Dict, Any

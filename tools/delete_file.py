@@ -39,7 +39,7 @@ def delete_file(filename: str, base_directory: str) -> bool:
             raise ValueError(f"{filename} is not a file")
             
         # Elimina il file
-        file_path.unlink()
+        file_path.unlink() #comando per eliminare il file
         
         return True
         

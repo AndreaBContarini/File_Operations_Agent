@@ -48,12 +48,12 @@ def read_file(filename: str, base_directory: str, encoding: str = 'utf-8') -> st
             raise ValueError(f"Cannot read {filename}: this appears to be a binary file ({file_type}, {size_str}). Binary files cannot be displayed as text.")
             
         with open(file_path, 'r', encoding=encoding) as f:
-            content = f.read()
+            content = f.read() # legge il contenuto del file
             
-        return content
+        return content # ritorna il contenuto del file
         
     except (FileNotFoundError, ValueError):
-        # Re-raise questi errori specifici senza wrapping
+        # Re-raise questi errori specifici senza wrapping, ossia senza aggiungere altre informazioni
         raise
     except PermissionError as e:
         raise PermissionError(f"Insufficient permissions to read {filename}: {e}")
@@ -95,8 +95,7 @@ def _is_likely_binary_file(file_path: Path) -> bool:
     try:
         with open(file_path, 'rb') as f:
             chunk = f.read(1024)
-            # Se contiene null bytes, è probabilmente binario
-            if b'\x00' in chunk:
+            if b'\x00' in chunk: # Significa che il file contiene null bytes. Se è così, probabilmente è un file binario
                 return True
             
             # Per file di testo, verifichiamo se è decodificabile come UTF-8

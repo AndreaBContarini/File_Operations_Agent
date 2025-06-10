@@ -1,11 +1,14 @@
 """
-Test suite for Custom ReAct and Pydantic-AI agents.
-Tests agent behavior, validation, and the specific fix for file analysis queries.
+Test suite complete for both agents (Custom ReAct + Pydantic-AI)
+Tests agent behavior, validation, and the specific fix for file analysis queries:
+- LLM validation test
+- File analysis integration test
+- Cover the requirements of the assignment.
 """
 import pytest
 import asyncio
 import os
-from unittest.mock import patch, Mock
+from unittest.mock import patch, Mock # patch è usato per mockare le chiamate a API, Mock è usato per creare oggetti simulati
 
 from agent.llm_validator import LLMQueryValidator, ValidationResult
 from agent.llm_agent import LLMFileAgent
@@ -127,7 +130,7 @@ class TestCustomReActAgent:
             "what are your capabilities?"
         ]
         
-        for query in no_tool_queries:
+        for query in no_tool_queries: # per ogni query, verifica se l'agente dovrebbe usare gli strumenti
             should_use = agent._should_use_tools(query, [])
             assert not should_use, f"Query '{query}' should NOT use tools but agent says yes"
 

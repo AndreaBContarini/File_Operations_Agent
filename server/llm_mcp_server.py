@@ -1,6 +1,8 @@
 """
-Enhanced MCP Server implementation using the Custom ReAct Agent.
-Exposes the Custom ReAct Agent with GPT-4o reasoning via MCP protocol.
+What the server does:
+- Starts a Custom ReAct agent with GPT-4o for advanced reasoning
+- Exposes the agent via MCP protocol to external clients (Claude Desktop in my case)
+- Handles JSON-RPC communication stdin/stdout with clients
 """
 import asyncio
 import json
@@ -12,7 +14,7 @@ import logging
 import os
 import signal
 
-# Configurazione logging MIGLIORATA - log su stderr, non stdout
+# Configurazione logging - log su stderr, non stdout, poichè il server è in ascolto su stdin/stdout
 logging.basicConfig(
     level=logging.INFO,
     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',

@@ -2,7 +2,7 @@
 Hybrid agent using GPT-4o for file operations and Groq for query validation.
 
 Architecture:
-- Groq llama-3.1-8b-instant: User query validation (optional)
+- Groq llama-3.1-8b-instant: User query validation (optional, if APIs are provided...theyy're free!)
 - GPT-4o: File operations with Pydantic-AI (required)
 """
 import os
@@ -26,7 +26,7 @@ except ImportError:
 # Import original tools for reuse
 import sys
 sys.path.append(str(Path(__file__).parent.parent))
-
+# Import tools
 from tools.list_files import list_files
 from tools.read_file import read_file
 from tools.write_file import write_file
@@ -49,14 +49,14 @@ class PydanticFileAgent:
         self, 
         base_directory: str, 
         openai_api_key: str,
-        groq_api_key: Optional[str] = None,
-        verbose: bool = False
+        groq_api_key: Optional[str] = None, 
+        verbose: bool = False # It is used to print the logs of the agent
     ):
         """
         Initialize the hybrid agent.
         
         Args:
-            base_directory: Base directory for file operations
+            base_directory: Base directory for file operations (fixed)
             openai_api_key: API key for OpenAI GPT-4o (required)
             groq_api_key: API key for Groq llama-3.1-8b-instant (optional)
             verbose: Flag for detailed logging
@@ -101,9 +101,9 @@ class PydanticFileAgent:
                     system_prompt=self._build_simple_validation_prompt()
                 )
                 
-                if verbose:
+                if verbose: # It is used to print the logs of the agent
                     logger.info("Validation agent (Groq) initialized successfully")
-            except Exception as e:
+            except Exception as e: # it means that the Groq API key is not valid
                 logger.warning(f"Failed to initialize validation agent: {e}")
                 self.validation_agent = None
         
@@ -118,6 +118,7 @@ class PydanticFileAgent:
     
     def _build_simple_validation_prompt(self) -> str:
         """Simple validation prompt for Groq without complex tool calling."""
+        
         return """You are a security validator for file operations. Analyze user queries and respond with ONLY one of these words:
 
 SAFE - if the query is safe for file operations (list, read, write, delete normal files, analyze, ask about files)
@@ -164,7 +165,7 @@ Respond with ONLY the word SAFE or DANGEROUS."""
 - "delete old.log" → MUST call delete_file_tool("old.log")
 - "what's the largest file?" → MUST call answer_question_tool("what's the largest file?")
 - "what does hello.py do?" → MUST call answer_question_tool("what does hello.py do?")
-- "cosa fa config.json?" → MUST call answer_question_tool("cosa fa config.json?")
+- "what can you tell me about config.json file?" → MUST call answer_question_tool("what can you tell me about config.json file?")
 
 **Multi-Step Tool Orchestration:**
 For complex requests, use multiple tools in sequence:
@@ -225,17 +226,23 @@ IMPORTANT: Tool usage is MANDATORY for all file operations. Always use tools fir
         """
         Registra i tool usando i decoratori nativi di Pydantic-AI.
         
-        Sostituisce il custom ToolRegistry con tool definition nativi
+        Sostituisce il custom ToolRegistry con tool definition nativi,
         che supportano validazione automatica e error handling.
         """
         
-        @self.file_operations_agent.tool
+        
+        @self.file_operations_agent.tool # Decorator for the tool (from Pydantic-AI); it is used to register the tool in the agent
         async def list_files_tool(ctx: RunContext[AgentDependencies]) -> List[Dict[str, Any]]:
             """
             Lista tutti i file nella directory di lavoro con metadati dettagliati.
             
             Returns:
                 Lista di dizionari con informazioni sui file (nome, dimensione, data modifica)
+            
+            Note: 
+            async def: definisce una funzione asincrona.
+            All’interno di una funzione async, si può usare la chiave await 
+            per 'aspettare' il risultato di un’altra funzione asincrona.
             """
             try:
                 if ctx.deps.verbose:
@@ -279,7 +286,7 @@ IMPORTANT: Tool usage is MANDATORY for all file operations. Always use tools fir
                     
                 return content
                 
-            except Exception as e:
+            except Exception as e: # Se succede un errore di tipo Exception (cioè praticamente qualsiasi errore), salvalo nella variabile e
                 logger.error(f"Error in read_file_tool for {filename}: {e}")
                 raise Exception(f"Failed to read file {filename}: {str(e)}")
         
@@ -349,8 +356,8 @@ IMPORTANT: Tool usage is MANDATORY for all file operations. Always use tools fir
         
         @self.file_operations_agent.tool
         async def answer_question_tool(
-            ctx: RunContext[AgentDependencies],
-            query: str
+            ctx: RunContext[AgentDependencies], # ctx è il contesto di esecuzione che contiene tutte le dipendenze e configurazioni necessarie per l'agente
+            query: str # domanda dell'utente
         ) -> str:
             """
             Answer intelligent questions about files by analyzing metadata and contents.
@@ -362,7 +369,7 @@ IMPORTANT: Tool usage is MANDATORY for all file operations. Always use tools fir
                 Answer to the question
             """
             try:
-                if ctx.deps.verbose:
+                if ctx.deps.verbose: # se verbose è True, stampa il log
                     logger.info(f"Executing answer_question tool with query: {query}")
                     
                 answer = answer_question_about_files(ctx.deps.base_directory, query, ctx.deps.openai_api_key)
@@ -535,7 +542,7 @@ IMPORTANT: Tool usage is MANDATORY for all file operations. Always use tools fir
         
         return f"""PydanticFileAgent (Hybrid) - File operations agent with hybrid architecture
 
-🏗️ ARCHITECTURE:
+ARCHITECTURE:
 • OpenAI GPT-4o: File operations and advanced reasoning
 • Groq llama-3.1-8b-instant: Query validation and security ({validation_status})
 
@@ -546,7 +553,7 @@ IMPORTANT: Tool usage is MANDATORY for all file operations. Always use tools fir
 • Delete files
 • Intelligent file analysis and content search
 
-✨ FEATURES:
+FEATURES:
 • Structured output validated with Pydantic
 • Automatic multi-step reasoning with GPT-4o
 • Security validation with Groq (if enabled)
@@ -554,11 +561,11 @@ IMPORTANT: Tool usage is MANDATORY for all file operations. Always use tools fir
 • Type-safe dependency injection
 • Robust error handling with fallback
 
-🔒 SECURITY:
+SECURITY:
 • Automatic query validation (if Groq is configured)
 • Sanitization of potentially dangerous commands
 • Prevention of path traversal and unauthorized access
 
-💡 USAGE:
+USAGE:
 Use natural language queries to interact with the agent.
 Examples: "list all files", "read config.json", "create a file test.txt".""" 

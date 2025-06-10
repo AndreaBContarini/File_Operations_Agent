@@ -1,5 +1,8 @@
 """
-Test suite for individual tools (CRUD operations).
+Test CRUD completi come richiesto dall'assignment
+Security tests (path traversal)
+Error handling tests
+Complete coverage of all 5 tools
 """
 import pytest
 import os
