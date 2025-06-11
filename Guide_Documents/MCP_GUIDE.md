@@ -1,4 +1,3 @@
-```markdown
 # MCP Guide (Model Context Protocol)
 
 Comprehensive guide for integrating the File Operations Agent with MCP clients like Claude Desktop and Cursor.
@@ -316,4 +315,3 @@ print('Configuration valid')
 
 # Test server startup
 timeout 5 python server/llm_mcp_server.py --directory test_files || echo 'Server test completed'
-```
