@@ -1,30 +1,33 @@
-# Guida MCP (Model Context Protocol)
+```markdown
+# MCP Guide (Model Context Protocol)
 
-Guida completa per l'integrazione del File Operations Agent con client MCP come Claude Desktop e Cursor.
+Comprehensive guide for integrating the File Operations Agent with MCP clients like Claude Desktop and Cursor.
 
-## Panoramica MCP
+## MCP Overview
 
-Il Model Context Protocol (MCP) è uno standard aperto che permette agli assistenti AI di connettersi in modo sicuro a fonti di dati e tool esterni. Il nostro File Operations Agent espone le sue funzionalità attraverso un server MCP:
+The Model Context Protocol (MCP) is an open standard that allows AI assistants to securely connect to data sources and external tools. Our File Operations Agent exposes its functionality through an MCP server:
 
-- **Server LLM** (`llm_mcp_server.py`): Operazioni avanzate con capacità di ragionamento LLM e GPT-4o
+- **LLM Server** (`llm_mcp_server.py`): Advanced operations with LLM reasoning capabilities and GPT-4o
 
-## Architettura MCP
+## MCP Architecture
 
 ```
-Client MCP (Claude Desktop/Cursor)
-    ↓ JSON-RPC 2.0
+
+MCP Client (Claude Desktop/Cursor)
+↓ JSON-RPC 2.0
 MCP Server (File Operations Agent)
-    ↓ Tool Registry
+↓ Tool Registry
 Tool Implementation (CRUD Operations)
-    ↓ File System
+↓ File System
 Working Directory
-```
 
-## Configurazione
+````
 
-### File di Configurazione
+## Configuration
 
-Il file `mcp_config.json` definisce i server MCP disponibili:
+### Configuration File
+
+The `mcp_config.json` file defines the available MCP servers:
 
 ```json
 {
@@ -46,88 +49,101 @@ Il file `mcp_config.json` definisce i server MCP disponibili:
     }
   }
 }
-```
+````
 
-### Installazione per Claude Desktop
+### Installation for Claude Desktop
 
 #### macOS
+
 ```bash
-# Copia la configurazione
+# Copy the configuration
 cp mcp_config.json ~/Library/Application\ Support/Claude/
 
-# Aggiorna i percorsi nel file
+# Update paths in the file
 nano ~/Library/Application\ Support/Claude/mcp_config.json
 ```
 
 #### Linux
+
 ```bash
-# Crea la directory se non esiste
+# Create the directory if it doesn't exist
 mkdir -p ~/.config/claude-desktop/
 
-# Copia la configurazione
+# Copy the configuration
 cp mcp_config.json ~/.config/claude-desktop/
 
-# Aggiorna i percorsi nel file
+# Update paths in the file
 nano ~/.config/claude-desktop/mcp_config.json
 ```
 
 #### Windows
+
 ```cmd
-# Copia la configurazione
+# Copy the configuration
 copy mcp_config.json %APPDATA%\Claude\
 
-# Modifica il file con un editor di testo
+# Edit the file with a text editor
 notepad %APPDATA%\Claude\mcp_config.json
 ```
 
-### Installazione per Cursor
+### Installation for Cursor
 
-Cursor supporta MCP attraverso configurazioni simili. Consulta la documentazione di Cursor per i percorsi specifici della configurazione.
+Cursor supports MCP through similar configurations. Refer to the Cursor documentation for specific configuration paths.
 
-## Tool Disponibili
+## Available Tools
 
-### Server LLM
+### LLM Server
 
-Il server LLM offre i seguenti tool per operazioni sui file:
+The LLM server provides the following tools for file operations:
 
-#### llm_query
-- **Descrizione**: Elabora query complesse usando capacità LLM con GPT-4o
-- **Parametri**:
-  - `query` (string): Query in linguaggio naturale
-- **Output**: Risposta elaborata con ragionamento LLM
+#### llm\_query
 
-#### list_files
-- **Descrizione**: Lista tutti i file nella directory di lavoro
-- **Parametri**: Nessuno
-- **Output**: Lista di file con metadati (nome, dimensione, data modifica)
+* **Description**: Processes complex queries using LLM capabilities with GPT-4o
+* **Parameters**:
 
-#### read_file
-- **Descrizione**: Legge il contenuto di un file
-- **Parametri**: 
-  - `filename` (string): Nome del file da leggere
-- **Output**: Contenuto del file come testo
+  * `query` (string): Natural language query
+* **Output**: Response with LLM-based reasoning
 
-#### write_file
-- **Descrizione**: Scrive contenuto in un file
-- **Parametri**:
-  - `filename` (string): Nome del file
-  - `content` (string): Contenuto da scrivere
-  - `mode` (string, opzionale): "w" per sovrascrivere, "a" per appendere
-- **Output**: Conferma dell'operazione
+#### list\_files
 
-#### delete_file
-- **Descrizione**: Elimina un file
-- **Parametri**:
-  - `filename` (string): Nome del file da eliminare
-- **Output**: Conferma dell'eliminazione
+* **Description**: Lists all files in the working directory
+* **Parameters**: None
+* **Output**: File list with metadata (name, size, modification date)
 
-## Esempi di Utilizzo
+#### read\_file
 
-### Operazioni Base in Claude Desktop
+* **Description**: Reads the content of a file
+* **Parameters**:
 
-**Utente**: "List all files in the directory"
+  * `filename` (string): Name of the file to read
+* **Output**: File content as text
 
-**Claude**: Utilizzerà il tool `list_files` e mostrerà:
+#### write\_file
+
+* **Description**: Writes content to a file
+* **Parameters**:
+
+  * `filename` (string): Name of the file
+  * `content` (string): Content to write
+  * `mode` (string, optional): "w" to overwrite, "a" to append
+* **Output**: Operation confirmation
+
+#### delete\_file
+
+* **Description**: Deletes a file
+* **Parameters**:
+
+  * `filename` (string): Name of the file to delete
+* **Output**: Deletion confirmation
+
+## Usage Examples
+
+### Basic Operations in Claude Desktop
+
+**User**: "List all files in the directory"
+
+**Claude**: Will use the `list_files` tool and display:
+
 ```
 Files in the directory:
 
@@ -137,69 +153,75 @@ script.py (2.1 KB)
 image.png (45.3 KB)
 ```
 
-**Utente**: "Read the content of document.txt"
+**User**: "Read the content of document.txt"
 
-**Claude**: Utilizzerà il tool `read_file` con parametro `filename: "document.txt"`
+**Claude**: Will use the `read_file` tool with parameter `filename: "document.txt"`
 
-### Operazioni Avanzate con Server LLM
+### Advanced Operations with LLM Server
 
-**Utente**: "Find all Python files and summarize what they do"
+**User**: "Find all Python files and summarize what they do"
 
-**Claude con Server LLM**: 
-1. Usa `list_files` per trovare file .py
-2. Usa `read_file` per ogni file Python
-3. Usa `llm_query` per analizzare e riassumere il codice
+**Claude with LLM Server**:
 
-**Utente**: "Create a backup of all important files"
+1. Uses `list_files` to find .py files
+2. Uses `read_file` for each Python file
+3. Uses `llm_query` to analyze and summarize the code
 
-**Claude con Server LLM**:
-1. Usa `llm_query` per identificare file "importanti"
-2. Usa `read_file` per leggere i contenuti
-3. Usa `write_file` per creare i backup
+**User**: "Create a backup of all important files"
 
-## Sicurezza e Limitazioni
+**Claude with LLM Server**:
 
-### Controlli di Sicurezza
+1. Uses `llm_query` to identify "important" files
+2. Uses `read_file` to read contents
+3. Uses `write_file` to create backups
 
-1. **Directory Constraint**: Tutti i tool operano solo nella directory specificata
-2. **Path Traversal Protection**: Prevenzione di accesso a file fuori dalla directory base
-3. **Input Validation**: Validazione di tutti i parametri di input
-4. **Error Handling**: Gestione sicura degli errori senza esposizione di informazioni sensibili
+## Security and Limitations
 
-### Limitazioni
+### Security Controls
 
-1. **Scope Limitato**: Solo operazioni sui file nella directory specificata
-2. **Dimensione File**: Limitazioni sulla dimensione dei file processabili
-3. **Tipo File**: Supporto ottimale per file di testo
-4. **Concorrenza**: Operazioni sequenziali, non parallele
+1. **Directory Constraint**: All tools operate only within the specified directory
+2. **Path Traversal Protection**: Prevents access to files outside the base directory
+3. **Input Validation**: Validates all input parameters
+4. **Error Handling**: Secure error handling with no exposure of sensitive information
+
+### Limitations
+
+1. **Limited Scope**: Only file operations in the specified directory
+2. **File Size**: Limitations on the size of files that can be processed
+3. **File Type**: Optimal support for text files
+4. **Concurrency**: Operations are sequential, not parallel
 
 ## Troubleshooting
 
-### Server Non Si Avvia
+### Server Not Starting
 
-**Problema**: "Server disconnected" in Claude Desktop
+**Issue**: "Server disconnected" in Claude Desktop
 
-**Soluzioni**:
-1. Verifica i percorsi nel file di configurazione
-2. Controlla che il virtual environment sia corretto
-3. Verifica i permessi della directory di lavoro
-4. Controlla i log: `/tmp/mcp_server.log`
+**Solutions**:
 
-### Errori di Autenticazione API
+1. Check paths in the configuration file
+2. Verify the virtual environment is correct
+3. Check permissions of the working directory
+4. Check logs: `/tmp/mcp_server.log`
 
-**Problema**: Errori con le API keys nel server LLM
+### API Authentication Errors
 
-**Soluzioni**:
-1. Verifica che le API keys siano configurate correttamente
-2. Controlla la validità delle chiavi
-3. Verifica i permessi delle variabili d'ambiente
+**Issue**: Errors with API keys in the LLM server
 
-### Tool Non Funzionano
+**Solutions**:
 
-**Problema**: I tool non rispondono o danno errori
+1. Ensure API keys are correctly configured
+2. Check the validity of the keys
+3. Check environment variable permissions
 
-**Soluzioni**:
-1. Testa i tool manualmente:
+### Tools Not Working
+
+**Issue**: Tools are unresponsive or return errors
+
+**Solutions**:
+
+1. Test tools manually:
+
    ```bash
    python -c "
    from agent.tool_registry import ToolRegistry
@@ -207,82 +229,84 @@ image.png (45.3 KB)
    print(registry.execute_tool('list_files'))
    "
    ```
-2. Verifica i permessi della directory
-3. Controlla i log per errori specifici
+2. Check directory permissions
+3. Inspect logs for specific errors
 
-### Performance Lente
+### Slow Performance
 
-**Problema**: Risposte lente dal server MCP
+**Issue**: Slow responses from the MCP server
 
-**Soluzioni**:
-1. Usa query dirette per operazioni semplici
-2. Ottimizza la dimensione della directory di lavoro
-3. Verifica la connessione internet per le API LLM
+**Solutions**:
 
-## Monitoraggio e Log
+1. Use direct queries for simple operations
+2. Optimize the working directory size
+3. Check internet connection for LLM APIs
 
-### File di Log
+## Monitoring and Logs
 
-- **Server LLM**: `/tmp/llm_mcp_server.log`
+### Log Files
 
-### Monitoraggio in Tempo Reale
+* **LLM Server**: `/tmp/llm_mcp_server.log`
+
+### Real-Time Monitoring
 
 ```bash
-# Monitora log del server LLM
+# Monitor LLM server logs
 tail -f /tmp/llm_mcp_server.log
 ```
 
-### Metriche Utili
+### Useful Metrics
 
-- Numero di richieste processate
-- Tempo di risposta medio
-- Errori per tipo
-- Utilizzo delle API (per server LLM)
+* Number of processed requests
+* Average response time
+* Errors by type
+* API usage (for LLM server)
 
 ## Best Practices
 
-### Configurazione
+### Configuration
 
-1. **Usa percorsi assoluti** nel file di configurazione
-2. **Configura API keys** come variabili d'ambiente
-3. **Testa la configurazione** prima dell'uso in produzione
-4. **Mantieni backup** della configurazione funzionante
+1. **Use absolute paths** in the configuration file
+2. **Configure API keys** as environment variables
+3. **Test configuration** before production use
+4. **Keep backups** of working configurations
 
-### Utilizzo
+### Usage
 
-1. **Inizia con operazioni semplici** per testare la connessione
-2. **Usa query appropriate** per il tipo di operazione richiesta
-3. **Monitora i log** per identificare problemi
-4. **Limita la dimensione** della directory di lavoro
+1. **Start with simple operations** to test the connection
+2. **Use appropriate queries** for the requested operation
+3. **Monitor logs** to identify issues
+4. **Limit the size** of the working directory
 
-### Sicurezza
+### Security
 
-1. **Non esporre directory sensibili** come directory di lavoro
-2. **Usa directory dedicate** per l'agente
-3. **Monitora l'accesso** ai file
-4. **Aggiorna regolarmente** le API keys
+1. **Do not expose sensitive directories** as working directories
+2. **Use dedicated directories** for the agent
+3. **Monitor file access**
+4. **Regularly rotate** API keys
 
-## Sviluppo e Estensioni
+## Development and Extensions
 
-### Aggiungere Nuovi Tool
+### Adding New Tools
 
-1. Implementa il tool in `tools/`
-2. Registra il tool in `agent/tool_registry.py`
-3. Aggiungi il tool ai server MCP
-4. Aggiorna la documentazione
+1. Implement the tool in `tools/`
+2. Register the tool in `agent/tool_registry.py`
+3. Add the tool to the MCP servers
+4. Update the documentation
 
-### Personalizzazione Server
+### Server Customization
 
-I server MCP possono essere personalizzati per:
-- Aggiungere nuovi tool
-- Modificare la logica di validazione
-- Implementare caching
-- Aggiungere metriche personalizzate
+MCP servers can be customized to:
+
+* Add new tools
+* Modify validation logic
+* Implement caching
+* Add custom metrics
 
 ### Testing
 
 ```bash
-# Test configurazione MCP
+# Test MCP configuration
 python -c "
 import json
 with open('mcp_config.json') as f:
@@ -293,5 +317,3 @@ print('Configuration valid')
 # Test server startup
 timeout 5 python server/llm_mcp_server.py --directory test_files || echo 'Server test completed'
 ```
-
-Questa guida fornisce una base completa per l'utilizzo e la configurazione del File Operations Agent tramite MCP.
