@@ -1,32 +1,32 @@
-# Setup Claude Desktop con File Operations Agent
+# Setting up Claude Desktop with File Operations Agent
 
-Guida dettagliata per configurare e utilizzare il File Operations Agent con Claude Desktop tramite MCP.
+Detailed guide for configuring and using the File Operations Agent with Claude Desktop through MCP.
 
-## Prerequisiti
+## Prerequisites
 
-- Claude Desktop installato
-- Python 3.8+ con virtual environment configurato
-- File Operations Agent installato e funzionante
-- API keys configurate (OpenAI e Groq)
+- Claude Desktop installed
+- Python 3.8+ with virtual environment configured
+- File Operations Agent installed and working
+- API keys configured (OpenAI and Groq)
 
-## Configurazione Passo-Passo
+## Step-by-Step Configuration
 
-### 1. Preparazione dell'Ambiente
+### 1. Environment Preparation
 
 ```bash
-# Assicurati che il virtual environment sia attivo
+# Make sure the virtual environment is active
 source .venv/bin/activate
 
-# Verifica che tutte le dipendenze siano installate
+# Verify all dependencies are installed
 pip install -r requirements.txt
 
-# Test rapido del sistema
+# Quick system test
 python -c "from agent.tool_registry import ToolRegistry; print('System ready')"
 ```
 
-### 2. Configurazione MCP
+### 2. MCP Configuration
 
-#### Trova la Directory di Configurazione
+#### Find the Configuration Directory
 
 **macOS:**
 ```bash
@@ -43,86 +43,86 @@ CONFIG_DIR="$HOME/.config/claude-desktop"
 set CONFIG_DIR=%APPDATA%\Claude
 ```
 
-#### Crea la Configurazione
+#### Create the Configuration
 
 ```bash
-# Crea la directory se non esiste (Linux)
+# Create the directory if it doesn't exist (Linux)
 mkdir -p "$CONFIG_DIR"
 
-# Copia il template di configurazione
+# Copy the configuration template
 cp mcp_config.json "$CONFIG_DIR/"
 ```
 
-### 3. Personalizzazione della Configurazione
+### 3. Configuration Customization
 
-Modifica il file `mcp_config.json` nella directory di configurazione di Claude:
+Edit the `mcp_config.json` file in Claude's configuration directory:
 
 ```json
 {
   "mcpServers": {
 
     "llm-file-operations-agent": {
-      "command": "/PERCORSO/ASSOLUTO/AL/TUO/.venv/bin/python",
+      "command": "/ABSOLUTE/PATH/TO/YOUR/.venv/bin/python",
       "args": [
-        "/PERCORSO/ASSOLUTO/AL/TUO/assignment/server/llm_mcp_server.py",
+        "/ABSOLUTE/PATH/TO/YOUR/assignment/server/llm_mcp_server.py",
         "--directory",
-        "/PERCORSO/ALLA/TUA/DIRECTORY/DI/LAVORO",
+        "/PATH/TO/YOUR/WORK/DIRECTORY",
         "--name",
         "llm-file-operations-agent"
       ],
       "env": {
-        "PYTHONPATH": "/PERCORSO/ASSOLUTO/AL/TUO/assignment",
-        "OPENAI_API_KEY": "LA_TUA_CHIAVE_OPENAI",
-        "GROQ_API_KEY": "LA_TUA_CHIAVE_GROQ"
+        "PYTHONPATH": "/ABSOLUTE/PATH/TO/YOUR/assignment",
+        "OPENAI_API_KEY": "YOUR_OPENAI_KEY",
+        "GROQ_API_KEY": "YOUR_GROQ_KEY"
       }
     }
   }
 }
 ```
 
-### 4. Sostituzione dei Percorsi
+### 4. Path Substitution
 
-Usa questi comandi per ottenere i percorsi corretti:
+Use these commands to get the correct paths:
 
 ```bash
-# Percorso al virtual environment Python
+# Path to virtual environment Python
 which python
 
-# Percorso assoluto al progetto
+# Absolute path to the project
 pwd
 
-# Percorso alla directory di lavoro (esempio)
+# Path to the work directory (example)
 echo "$HOME/Documents/agent_workspace"
 ```
 
-### 5. Test della Configurazione
+### 5. Configuration Testing
 
-Prima di riavviare Claude Desktop, testa i server:
+Before restarting Claude Desktop, test the servers:
 
 ```bash
-# Test server LLM
+# Test LLM server
 python server/llm_mcp_server.py --directory test_files --test
 ```
 
-### 6. Riavvio di Claude Desktop
+### 6. Claude Desktop Restart
 
-1. Chiudi completamente Claude Desktop
-2. Riavvia l'applicazione
-3. Verifica che i server MCP siano connessi
+1. Completely close Claude Desktop
+2. Restart the application
+3. Verify that MCP servers are connected
 
-## Verifica dell'Installazione
+## Installation Verification
 
-### Controllo Stato Server
+### Server Status Check
 
-In Claude Desktop, i server MCP dovrebbero apparire come connessi. Se vedi errori:
+In Claude Desktop, MCP servers should appear as connected. If you see errors:
 
-1. Controlla i log:
+1. Check the logs:
    ```bash
    tail -f /tmp/llm_mcp_server.log
    tail -f /tmp/llm_mcp_server.log
    ```
 
-2. Verifica la configurazione:
+2. Verify the configuration:
    ```bash
    python -c "
    import json
@@ -132,53 +132,53 @@ In Claude Desktop, i server MCP dovrebbero apparire come connessi. Se vedi error
    "
    ```
 
-### Test Funzionalità
+### Functionality Testing
 
-Prova questi comandi in Claude Desktop:
+Try these commands in Claude Desktop:
 
-**Test Base:**
+**Basic Test:**
 ```
 List all files in the directory
 ```
 
-**Test Lettura:**
+**Read Test:**
 ```
 Read the content of example.txt
 ```
 
-**Test Scrittura:**
+**Write Test:**
 ```
 Create a file called test.txt with the content "Hello from Claude Desktop"
 ```
 
-**Test Analisi:**
+**Analysis Test:**
 ```
 What types of files are in the directory and how many of each?
 ```
 
-## Utilizzo Avanzato
+## Advanced Usage
 
-### Operazioni Multi-Step
+### Multi-Step Operations
 
-Claude Desktop può orchestrare operazioni complesse:
+Claude Desktop can orchestrate complex operations:
 
 ```
 Find all Python files, read their content, and create a summary document
 ```
 
-Questo comando farà:
-1. Lista i file per trovare quelli .py
-2. Legge il contenuto di ogni file Python
-3. Analizza il codice
-4. Crea un documento di riepilogo
+This command will:
+1. List files to find .py ones
+2. Read the content of each Python file
+3. Analyze the code
+4. Create a summary document
 
-### Backup e Gestione File
+### Backup and File Management
 
 ```
 Create backups of all important files by copying them with a timestamp suffix
 ```
 
-### Analisi Contenuti
+### Content Analysis
 
 ```
 Analyze all text files and tell me which ones contain specific keywords
@@ -186,38 +186,38 @@ Analyze all text files and tell me which ones contain specific keywords
 
 ## Troubleshooting
 
-### Server Disconnesso
+### Disconnected Server
 
-**Sintomi:** "Server disconnected" in Claude Desktop
+**Symptoms:** "Server disconnected" in Claude Desktop
 
-**Soluzioni:**
-1. Verifica i percorsi nel file di configurazione
-2. Controlla che il virtual environment sia corretto
-3. Verifica i permessi della directory
-4. Controlla i log per errori specifici
+**Solutions:**
+1. Verify paths in the configuration file
+2. Check that the virtual environment is correct
+3. Verify directory permissions
+4. Check logs for specific errors
 
-### Errori di Permessi
+### Permission Errors
 
-**Sintomi:** Errori di accesso ai file
+**Symptoms:** File access errors
 
-**Soluzioni:**
+**Solutions:**
 ```bash
-# Verifica permessi directory di lavoro
+# Check work directory permissions
 ls -la /path/to/work/directory
 
-# Correggi permessi se necessario
+# Fix permissions if necessary
 chmod 755 /path/to/work/directory
 chmod 644 /path/to/work/directory/*
 ```
 
-### API Keys Non Funzionanti
+### Non-Working API Keys
 
-**Sintomi:** Errori con il server LLM
+**Symptoms:** Errors with the LLM server
 
-**Soluzioni:**
-1. Verifica che le API keys siano valide
-2. Controlla i limiti di utilizzo
-3. Testa le chiavi manualmente:
+**Solutions:**
+1. Verify that API keys are valid
+2. Check usage limits
+3. Test keys manually:
    ```bash
    python -c "
    import os
@@ -227,20 +227,20 @@ chmod 644 /path/to/work/directory/*
    "
    ```
 
-### Performance Lente
+### Slow Performance
 
-**Sintomi:** Risposte lente da Claude Desktop
+**Symptoms:** Slow responses from Claude Desktop
 
-**Soluzioni:**
-1. Usa il server LLM con query dirette per operazioni semplici
-2. Riduci la dimensione della directory di lavoro
-3. Verifica la connessione internet
+**Solutions:**
+1. Use the LLM server with direct queries for simple operations
+2. Reduce the size of the work directory
+3. Check internet connection
 
-## Configurazioni Avanzate
+## Advanced Configurations
 
-### Directory Multiple
+### Multiple Directories
 
-Puoi configurare server per directory diverse:
+You can configure servers for different directories:
 
 ```json
 {
@@ -269,9 +269,9 @@ Puoi configurare server per directory diverse:
 }
 ```
 
-### Configurazione Sicura
+### Secure Configuration
 
-Per ambienti di produzione:
+For production environments:
 
 ```json
 {
@@ -297,34 +297,34 @@ Per ambienti di produzione:
 
 ## Best Practices
 
-### Sicurezza
+### Security
 
-1. **Usa directory dedicate** per l'agente, non directory di sistema
-2. **Limita i permessi** della directory di lavoro
-3. **Non esporre directory sensibili** come home o root
-4. **Monitora l'attività** attraverso i log
+1. **Use dedicated directories** for the agent, not system directories
+2. **Limit permissions** of the work directory
+3. **Don't expose sensitive directories** like home or root
+4. **Monitor activity** through logs
 
 ### Performance
 
-1. **Mantieni directory piccole** per performance migliori
-2. **Usa il server appropriato** (deterministico vs LLM)
-3. **Pulisci regolarmente** i file temporanei
-4. **Monitora l'uso delle API** per controllare i costi
+1. **Keep directories small** for better performance
+2. **Use the appropriate server** (deterministic vs LLM)
+3. **Regularly clean** temporary files
+4. **Monitor API usage** to control costs
 
-### Manutenzione
+### Maintenance
 
-1. **Aggiorna regolarmente** le API keys
-2. **Monitora i log** per identificare problemi
-3. **Testa la configurazione** dopo modifiche
-4. **Mantieni backup** della configurazione funzionante
+1. **Regularly update** API keys
+2. **Monitor logs** to identify issues
+3. **Test configuration** after changes
+4. **Keep backups** of working configuration
 
-## Supporto
+## Support
 
-Per problemi non risolti:
+For unresolved issues:
 
-1. Controlla i log dettagliati
-2. Verifica la configurazione con gli script di test
-3. Consulta la documentazione MCP ufficiale
-4. Contatta il supporto tecnico
+1. Check detailed logs
+2. Verify configuration with test scripts
+3. Consult official MCP documentation
+4. Contact technical support
 
-Questa configurazione ti permetterà di utilizzare il File Operations Agent direttamente in Claude Desktop con tutte le sue funzionalità avanzate. 
+This configuration will allow you to use the File Operations Agent directly in Claude Desktop with all its advanced features.
