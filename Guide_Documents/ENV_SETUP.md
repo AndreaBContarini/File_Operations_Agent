@@ -1,89 +1,89 @@
-# Configurazione Ambiente
+# Environment Configuration
 
-Guida completa per la configurazione dell'ambiente di sviluppo e produzione per il File Operations Agent.
+Complete guide for configuring the development and production environment for the File Operations Agent.
 
-## Prerequisiti di Sistema
+## System Prerequisites
 
 ### Python
-- **Versione richiesta**: Python 3.8 o superiore
-- **Versione raccomandata**: Python 3.10+
+- **Required version**: Python 3.8 or higher
+- **Recommended version**: Python 3.10+
 
-Verifica la versione installata:
+Check the installed version:
 ```bash
 python --version
-# oppure
+# or
 python3 --version
 ```
 
 ### Virtual Environment
-Fortemente raccomandato per isolare le dipendenze:
+Strongly recommended to isolate dependencies:
 
 ```bash
-# Crea virtual environment
+# Create virtual environment
 python -m venv .venv
 
-# Attiva virtual environment
+# Activate virtual environment
 # Linux/macOS:
 source .venv/bin/activate
 
 # Windows:
 .venv\Scripts\activate
 
-# Verifica attivazione
-which python  # dovrebbe puntare a .venv/bin/python
+# Verify activation
+which python  # should point to .venv/bin/python
 ```
 
-## Installazione Dipendenze
+## Dependencies Installation
 
-### Dipendenze Core
+### Core Dependencies
 ```bash
-# Installa tutte le dipendenze
+# Install all dependencies
 pip install -r requirements.txt
 
-# Oppure installa manualmente:
+# Or install manually:
 pip install openai groq pathlib typing-extensions pytest
 ```
 
-### Dipendenze di Sviluppo
+### Development Dependencies
 ```bash
-# Per sviluppo e testing
+# For development and testing
 pip install pytest pytest-cov black flake8 mypy
 ```
 
-## Configurazione API Keys
+## API Keys Configuration
 
-### Metodo 1: File .env (Raccomandato)
+### Method 1: .env File (Recommended)
 
-Crea un file `.env` nella root del progetto:
+Create a `.env` file in the project root:
 
 ```env
-# OpenAI API Key per GPT-4o
+# OpenAI API Key for GPT-4o
 OPENAI_API_KEY=sk-proj-your-openai-key-here
 
-# Groq API Key per LLaMA 3 8B
+# Groq API Key for LLaMA 3 8B
 GROQ_API_KEY=gsk_your-groq-key-here
 
-# Opzionale: Configurazioni aggiuntive
+# Optional: Additional configurations
 PYTHONPATH=/path/to/assignment
 LOG_LEVEL=INFO
 ```
 
-### Metodo 2: Variabili d'Ambiente
+### Method 2: Environment Variables
 
 ```bash
-# Esporta temporaneamente (sessione corrente)
+# Export temporarily (current session)
 export OPENAI_API_KEY="sk-proj-your-openai-key-here"
 export GROQ_API_KEY="gsk_your-groq-key-here"
 
-# Aggiungi al profilo shell per persistenza
+# Add to shell profile for persistence
 echo 'export OPENAI_API_KEY="sk-proj-your-openai-key-here"' >> ~/.bashrc
 echo 'export GROQ_API_KEY="gsk_your-groq-key-here"' >> ~/.bashrc
 source ~/.bashrc
 ```
 
-### Metodo 3: Configurazione Diretta nel Codice
+### Method 3: Direct Configuration in Code
 
-**Non raccomandato per produzione**
+**Not recommended for production**
 
 ```python
 import os
@@ -91,62 +91,62 @@ os.environ['OPENAI_API_KEY'] = 'your-key-here'
 os.environ['GROQ_API_KEY'] = 'your-key-here'
 ```
 
-## Ottenere le API Keys
+## Obtaining API Keys
 
 ### OpenAI API Key
 
-1. Vai su [platform.openai.com](https://platform.openai.com)
-2. Crea un account o effettua il login
-3. Naviga su "API Keys" nel dashboard
-4. Clicca "Create new secret key"
-5. Copia la chiave (inizia con `sk-proj-`)
+1. Go to [platform.openai.com](https://platform.openai.com)
+2. Create an account or log in
+3. Navigate to "API Keys" in the dashboard
+4. Click "Create new secret key"
+5. Copy the key (starts with `sk-proj-`)
 
 ### Groq API Key
 
-1. Vai su [console.groq.com](https://console.groq.com)
-2. Crea un account o effettua il login
-3. Naviga su "API Keys"
-4. Clicca "Create API Key"
-5. Copia la chiave (inizia con `gsk_`)
+1. Go to [console.groq.com](https://console.groq.com)
+2. Create an account or log in
+3. Navigate to "API Keys"
+4. Click "Create API Key"
+5. Copy the key (starts with `gsk_`)
 
-## Configurazione Directory di Lavoro
+## Work Directory Configuration
 
-### Struttura Raccomandata
+### Recommended Structure
 
 ```
 /your-workspace/
-├── assignment/           # Codice del progetto
+├── assignment/           # Project code
 │   ├── .venv/           # Virtual environment
 │   ├── .env             # API keys
 │   └── ...
-└── work_directory/      # Directory di lavoro per i file
+└── work_directory/      # Work directory for files
     ├── documents/
     ├── data/
     └── temp/
 ```
 
-### Permessi Directory
+### Directory Permissions
 
 ```bash
-# Assicurati che la directory di lavoro abbia i permessi corretti
+# Ensure work directory has correct permissions
 chmod 755 /path/to/work_directory
 chmod 644 /path/to/work_directory/*
 
-# Per directory temporanee
+# For temporary directories
 mkdir -p /tmp/agent_work
 chmod 777 /tmp/agent_work
 ```
 
-## Configurazione MCP
+## MCP Configuration
 
 ### Claude Desktop
 
-1. **Trova la directory di configurazione:**
+1. **Find the configuration directory:**
    - macOS: `~/Library/Application Support/Claude/`
    - Linux: `~/.config/claude-desktop/`
    - Windows: `%APPDATA%\Claude\`
 
-2. **Copia la configurazione:**
+2. **Copy the configuration:**
    ```bash
    # macOS
    cp mcp_config.json ~/Library/Application\ Support/Claude/
@@ -158,7 +158,7 @@ chmod 777 /tmp/agent_work
    copy mcp_config.json %APPDATA%\Claude\
    ```
 
-3. **Aggiorna i percorsi nel file:**
+3. **Update paths in the file:**
    ```json
    {
      "mcpServers": {
@@ -176,14 +176,14 @@ chmod 777 /tmp/agent_work
 
 ### Cursor IDE
 
-Per Cursor, la configurazione MCP è simile ma potrebbe richiedere percorsi diversi. Consulta la documentazione di Cursor per dettagli specifici.
+For Cursor, MCP configuration is similar but may require different paths. Consult Cursor's documentation for specific details.
 
-## Verifica Configurazione
+## Configuration Verification
 
-### Test Base
+### Basic Test
 
 ```bash
-# Test import delle dipendenze
+# Test dependency imports
 python -c "import openai, groq; print('Dependencies OK')"
 
 # Test API keys
@@ -195,7 +195,7 @@ print('API keys configured')
 "
 ```
 
-### Test Funzionalità
+### Functionality Test
 
 ```bash
 # Test CLI
@@ -209,28 +209,28 @@ print('Available tools:', list(registry.list_tools().keys()))
 "
 ```
 
-### Test MCP Server
+### MCP Server Test
 
 ```bash
 # Test server startup
 python server/llm_mcp_server.py --directory test_files --test
 
-# Test con input simulato
+# Test with simulated input
 echo '{"jsonrpc": "2.0", "id": 1, "method": "initialize", "params": {}}' | \
 python server/llm_mcp_server.py --directory test_files
 ```
 
 ## Troubleshooting
 
-### Problemi Comuni
+### Common Issues
 
 #### Import Error
 ```
 ModuleNotFoundError: No module named 'openai'
 ```
-**Soluzione:**
+**Solution:**
 ```bash
-# Verifica virtual environment attivo
+# Verify virtual environment is active
 which python
 pip install -r requirements.txt
 ```
@@ -239,22 +239,22 @@ pip install -r requirements.txt
 ```
 openai.AuthenticationError: Incorrect API key provided
 ```
-**Soluzione:**
+**Solution:**
 ```bash
-# Verifica configurazione
+# Verify configuration
 echo $OPENAI_API_KEY
-# Rigenera la chiave se necessario
+# Regenerate key if necessary
 ```
 
 #### Permission Error
 ```
 PermissionError: [Errno 13] Permission denied
 ```
-**Soluzione:**
+**Solution:**
 ```bash
-# Correggi permessi directory
+# Fix directory permissions
 chmod 755 /path/to/directory
-# Verifica ownership
+# Verify ownership
 ls -la /path/to/directory
 ```
 
@@ -262,58 +262,58 @@ ls -la /path/to/directory
 ```
 Server disconnected
 ```
-**Soluzione:**
-1. Verifica percorsi nel file di configurazione
-2. Controlla log del server: `/tmp/llm_mcp_server.log`
-3. Testa il server manualmente
+**Solution:**
+1. Verify paths in configuration file
+2. Check server log: `/tmp/llm_mcp_server.log`
+3. Test server manually
 
-### Log e Debug
+### Logging and Debug
 
-#### Abilitare Logging Dettagliato
+#### Enable Detailed Logging
 
 ```bash
-# Variabile d'ambiente per debug
+# Environment variable for debug
 export LOG_LEVEL=DEBUG
 
-# Log file personalizzato
+# Custom log file
 export LOG_FILE=/tmp/agent_debug.log
 ```
 
-#### Monitoraggio Log MCP
+#### MCP Log Monitoring
 
 ```bash
-# Monitora log in tempo reale
+# Monitor log in real time
 tail -f /tmp/llm_mcp_server.log
 ```
 
-## Configurazione Produzione
+## Production Configuration
 
-### Sicurezza
+### Security
 
-1. **Non committare API keys nel repository**
-2. **Usa file .env con permessi restrittivi:**
+1. **Don't commit API keys to repository**
+2. **Use .env file with restrictive permissions:**
    ```bash
    chmod 600 .env
    ```
-3. **Considera l'uso di secret management tools**
+3. **Consider using secret management tools**
 
 ### Performance
 
-1. **Configura timeout appropriati**
-2. **Limita dimensioni file processabili**
-3. **Implementa rate limiting per API calls**
+1. **Configure appropriate timeouts**
+2. **Limit processable file sizes**
+3. **Implement rate limiting for API calls**
 
 ### Monitoring
 
-1. **Configura logging strutturato**
-2. **Implementa health checks**
-3. **Monitora usage delle API**
+1. **Configure structured logging**
+2. **Implement health checks**
+3. **Monitor API usage**
 
-## Configurazioni Avanzate
+## Advanced Configurations
 
 ### Proxy Configuration
 
-Se dietro un proxy aziendale:
+If behind a corporate proxy:
 
 ```bash
 export HTTP_PROXY=http://proxy.company.com:8080
@@ -323,23 +323,21 @@ export NO_PROXY=localhost,127.0.0.1
 
 ### Custom Model Configuration
 
-Per utilizzare modelli diversi:
+To use different models:
 
 ```python
 # In agent/llm_validator.py
-GROQ_MODEL = "llama-3.1-70b-versatile"  # Modello più potente
-OPENAI_MODEL = "gpt-4o-mini"            # Modello più economico
+GROQ_MODEL = "llama-3.1-70b-versatile"  # More powerful model
+OPENAI_MODEL = "gpt-4o-mini"            # More economical model
 ```
 
 ### Batch Processing
 
-Per elaborazione di grandi volumi:
+For large volume processing:
 
 ```python
-# Configurazione batch
+# Batch configuration
 BATCH_SIZE = 100
 MAX_CONCURRENT_REQUESTS = 5
 REQUEST_TIMEOUT = 30
 ```
-
-Questa configurazione garantisce un ambiente robusto e sicuro per il File Operations Agent. 
